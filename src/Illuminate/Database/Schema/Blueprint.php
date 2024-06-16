@@ -956,7 +956,6 @@ class Blueprint
      */
     public function foreignId($column, $type = 'bigInteger')
     {
-
         return $this->addColumnDefinition(new ForeignIdColumnDefinition($this, [
             'type' => $type,
             'name' => $column,
@@ -1398,6 +1397,17 @@ class Blueprint
     public function macAddress($column = 'mac_address')
     {
         return $this->addColumn('macAddress', $column);
+    }
+
+    /**
+     * Create a new phone number column on the table.
+     *
+     * @param  string  $column
+     * @return \Illuminate\Database\Schema\ColumnDefinition
+     */
+    public function phoneNumber($column = 'phone_number')
+    {
+        return $this->string($column, 16);
     }
 
     /**
