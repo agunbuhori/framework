@@ -1403,32 +1403,50 @@ class Blueprint
      * Create a new phone number column on the table.
      *
      * @param  string  $column
-     * @return void
+     * @param  integer  $length
+     * @return object
      */
-    public function phoneNumber($column = 'phone_number')
+    public function phoneNumber($column = 'phone_number', $length = 18)
     {
-        return $this->string($column, 16);
+        return $this->string($column, $length);
     }
 
     /**
      * Create a new unique phone number column on the table.
      *
      * @param  string  $column
+     * @param  integer  $length
      * @return void
      */
-    public function uniquePhoneNumber($column = 'phone_number')
+    public function uniquePhoneNumber($column = 'phone_number', $length = 18)
     {
-        return $this->string($column, 16)->unique();
+        return $this->phoneNumber($column, $length)->unique();
+    }
+
+    /**
+     * Create full person name (first_name, middle_name, and last_name);
+     *
+     * @param  string  $column
+     * @return object
+     */
+    public function personName()
+    {
+        $this->string('first_name', 255);
+        $this->string('middle_name', 255)->nullable();
+        $this->string('last_name', 255)->nullable();
     }
 
     /**
      * Create a new email column on the table.
      *
      * @param  string  $column
-     * @return void
+     * @param  integer  $length
+     * @return object
      */
-    public function email($column = 'email')
+    public function email($column = 'email', $length = null)
     {
+        $length = !is_null($length) ? $length : Builder::$defaultStringLength;
+
         return $this->string($column, 255);
     }
 
@@ -1436,11 +1454,12 @@ class Blueprint
      * Create a new unique email column on the table.
      *
      * @param  string  $column
+     * @param  integer  $length
      * @return void
      */
-    public function uniqueEmail($column = 'email')
+    public function uniqueEmail($column = 'email', $length = null)
     {
-        return $this->string($column, 255)->unique();
+        $this->email($column, $length)->unique();
     }
 
     /**
