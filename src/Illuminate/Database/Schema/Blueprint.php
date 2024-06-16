@@ -91,7 +91,7 @@ class Blueprint
         $this->table = $table;
         $this->prefix = $prefix;
 
-        if (! is_null($callback)) {
+        if (!is_null($callback)) {
             $callback($this);
         }
     }
@@ -133,10 +133,10 @@ class Blueprint
                 continue;
             }
 
-            $method = 'compile'.ucfirst($command->name);
+            $method = 'compile' . ucfirst($command->name);
 
             if (method_exists($grammar, $method) || $grammar::hasMacro($method)) {
-                if (! is_null($sql = $grammar->$method($this, $command, $connection))) {
+                if (!is_null($sql = $grammar->$method($this, $command, $connection))) {
                     $statements = array_merge($statements, (array) $sql);
                 }
             }
@@ -180,11 +180,11 @@ class Blueprint
      */
     protected function addImpliedCommands(Connection $connection, Grammar $grammar)
     {
-        if (count($this->getAddedColumns()) > 0 && ! $this->creating()) {
+        if (count($this->getAddedColumns()) > 0 && !$this->creating()) {
             array_unshift($this->commands, $this->createCommand('add'));
         }
 
-        if (count($this->getChangedColumns()) > 0 && ! $this->creating()) {
+        if (count($this->getChangedColumns()) > 0 && !$this->creating()) {
             array_unshift($this->commands, $this->createCommand('change'));
         }
 
@@ -225,7 +225,7 @@ class Blueprint
                 // and the column is supposed to be changed, we will call the drop index
                 // method with an array of column to drop it by its conventional name.
                 elseif ($column->{$index} === false && $column->change) {
-                    $this->{'drop'.ucfirst($index)}([$column->name]);
+                    $this->{'drop' . ucfirst($index)}([$column->name]);
                     $column->{$index} = null;
 
                     continue 2;
@@ -760,7 +760,7 @@ class Blueprint
      */
     public function char($column, $length = null)
     {
-        $length = ! is_null($length) ? $length : Builder::$defaultStringLength;
+        $length = !is_null($length) ? $length : Builder::$defaultStringLength;
 
         return $this->addColumn('char', $column, compact('length'));
     }
@@ -954,14 +954,59 @@ class Blueprint
      * @param  string  $column
      * @return \Illuminate\Database\Schema\ForeignIdColumnDefinition
      */
-    public function foreignId($column)
+    public function foreignId($column, $type = 'bigInteger')
     {
+
         return $this->addColumnDefinition(new ForeignIdColumnDefinition($this, [
-            'type' => 'bigInteger',
+            'type' => $type,
             'name' => $column,
             'autoIncrement' => false,
             'unsigned' => true,
         ]));
+    }
+
+    /**
+     * Create a new unsigned integer (4-byte) column on the table.
+     *
+     * @param  string  $column
+     * @return \Illuminate\Database\Schema\ForeignIdColumnDefinition
+     */
+    public function foreignInteger($column)
+    {
+        return $this->foreignId($column, 'integer');
+    }
+
+    /**
+     * Create a new unsigned medium integer (3-byte) column on the table.
+     *
+     * @param  string  $column
+     * @return \Illuminate\Database\Schema\ForeignIdColumnDefinition
+     */
+    public function foreignMediumInteger($column)
+    {
+        return $this->foreignId($column, 'mediumInteger');
+    }
+
+    /**
+     * Create a new unsigned small integer (2-byte) column on the table.
+     *
+     * @param  string  $column
+     * @return \Illuminate\Database\Schema\ForeignIdColumnDefinition
+     */
+    public function foreignSmallInteger($column)
+    {
+        return $this->foreignId($column, 'smallInteger');
+    }
+
+    /**
+     * Create a new unsigned tiny integer (1-byte) column on the table.
+     *
+     * @param  string  $column
+     * @return \Illuminate\Database\Schema\ForeignIdColumnDefinition
+     */
+    public function foreignTinyInteger($column)
+    {
+        return $this->foreignId($column, 'tinyInteger');
     }
 
     /**
@@ -1565,7 +1610,8 @@ class Blueprint
         $index = $index ?: $this->createIndexName($type, $columns);
 
         return $this->addCommand(
-            $type, compact('index', 'columns', 'algorithm')
+            $type,
+            compact('index', 'columns', 'algorithm')
         );
     }
 
@@ -1601,10 +1647,10 @@ class Blueprint
     protected function createIndexName($type, array $columns)
     {
         $table = str_contains($this->table, '.')
-            ? substr_replace($this->table, '.'.$this->prefix, strrpos($this->table, '.'), 1)
-            : $this->prefix.$this->table;
+            ? substr_replace($this->table, '.' . $this->prefix, strrpos($this->table, '.'), 1)
+            : $this->prefix . $this->table;
 
-        $index = strtolower($table.'_'.implode('_', $columns).'_'.$type);
+        $index = strtolower($table . '_' . implode('_', $columns) . '_' . $type);
 
         return str_replace(['-', '.'], '_', $index);
     }
@@ -1748,7 +1794,7 @@ class Blueprint
     public function getAddedColumns()
     {
         return array_filter($this->columns, function ($column) {
-            return ! $column->change;
+            return !$column->change;
         });
     }
 
