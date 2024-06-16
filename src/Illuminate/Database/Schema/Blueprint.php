@@ -1403,7 +1403,7 @@ class Blueprint
      * Create a new phone number column on the table.
      *
      * @param  string  $column
-     * @return \Illuminate\Database\Schema\ColumnDefinition
+     * @return void
      */
     public function phoneNumber($column = 'phone_number')
     {
@@ -1411,16 +1411,37 @@ class Blueprint
     }
 
     /**
-     * Create a new phone number column on the table.
+     * Create a new unique phone number column on the table.
      *
      * @param  string  $column
-     * @return \Illuminate\Database\Schema\ColumnDefinition
+     * @return void
+     */
+    public function uniquePhoneNumber($column = 'phone_number')
+    {
+        return $this->string($column, 16)->unique();
+    }
+
+    /**
+     * Create a new email column on the table.
+     *
+     * @param  string  $column
+     * @return void
+     */
+    public function email($column = 'email')
+    {
+        return $this->string($column, 255);
+    }
+
+    /**
+     * Create a new unique email column on the table.
+     *
+     * @param  string  $column
+     * @return void
      */
     public function uniqueEmail($column = 'email')
     {
         return $this->string($column, 255)->unique();
     }
-
 
     /**
      * Create a new geometry column on the table.
